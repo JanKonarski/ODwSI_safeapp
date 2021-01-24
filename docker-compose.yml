@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+  sql-service:
+    build: "./sql"
+    ports:
+      - 6612:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+
+  web-service:
+    build: "./web"
+    ports:
+      - 8000:80
+      - 4430:443
+    depends_on:
+      - sql-service
+  
+  admin-service:
+    build: "./admin"
+    ports:
+      - 8080:80
+    depends_on:
+      - sql-service
+    environment:
+      PMA_HOST: sql-service
+      PMA_PORTS: 3306
+      PMA_USER: root
+      PMA_PASSWORD: toor
